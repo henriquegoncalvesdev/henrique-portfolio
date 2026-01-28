@@ -174,13 +174,13 @@ Based in Brazil. Works globally.
       ],
       images: [
         {
-          src: "/images/projects/project-01/cover-02.jpg",
+          src: "/images/projects/project-01/cover-02.png",
           alt: "React UI components and screens",
           width: 16,
           height: 9,
         },
         {
-          src: "/images/projects/project-01/cover-03.jpg",
+          src: "/images/projects/project-01/cover-03.png",
           alt: "Reusable component system preview",
           width: 16,
           height: 9,
@@ -201,7 +201,7 @@ Based in Brazil. Works globally.
       ],
       images: [
         {
-          src: "/images/projects/project-01/cover-04.jpg",
+          src: "/images/projects/project-01/cover-04.png",
           alt: "Next.js app screens and dashboard",
           width: 16,
           height: 9,
@@ -221,7 +221,14 @@ Based in Brazil. Works globally.
         { name: "JavaScript", icon: "javascript" },
         { name: "ES6+", icon: "code" },
       ],
-      images: [], // optional
+      images: [
+        {
+          src: "/images/projects/project-01/cover-05.png",
+          alt: "TypeScript code editor screen",
+          width: 16,
+          height: 9,
+        }
+      ], // optional
     },
     {
       title: "Styling / UI",
