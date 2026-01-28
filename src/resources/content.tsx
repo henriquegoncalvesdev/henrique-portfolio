@@ -8,7 +8,8 @@ const person: Person = {
   role: "Full-Stack Developer",
   avatar: "/images/avatar.jpg",
   email: "henriquegoncalvesdev@gmail.com",
-  location: "America/Sao_Paulo", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+  location: "America/Sao_Paulo", // Timezone for time display functionality
+  locationDisplay: "🇧🇷 Brazil", // Display location shown to users
   languages: ["English", "Portuguese"], // optional: Leave the array empty if you don't want to display languages
 };
 
@@ -58,7 +59,7 @@ const home: Home = {
   path: "/",
   image: "/images/og/home.jpg",
   label: "Home",
-  title: `${person.name}'s Portfolio`,
+  title: `${person.name} – ${person.role}`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
   headline: <>Code that thinks, design that breathes.</>,
   featured: {
@@ -85,7 +86,7 @@ const about: About = {
   path: "/about",
   label: "About",
   title: `About – ${person.name}`,
-  description: `Meet ${person.name}, ${person.role} from ${person.location}`,
+  description: `Meet ${person.name}, ${person.role} from ${person.locationDisplay || person.location}`,
   tableOfContent: {
     display: true,
     subItems: false,
@@ -102,56 +103,42 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        Selene is a Jakarta-based design engineer with a passion for transforming complex challenges
-        into simple, elegant design solutions. Her work spans digital interfaces, interactive
-        experiences, and the convergence of design and technology.
+        
+
+Henrique builds AI-powered web apps from architecture to deployment.
+His work sits at the intersection of solid engineering and practical AI: context-aware features, intelligent workflows, and interfaces designed to reduce friction rather than add complexity.
+The stack: React, Next.js, TypeScript on the front. Node, Express, SQL, and vector databases on the back. LLMs including OpenAI, Claude, and Gemini integrated into production systems.
+He's most useful when a project needs one person who can own the full picture product thinking, technical decisions, and shipping code that holds up.
+Based in Brazil. Works globally.
       </>
     ),
   },
   work: {
     display: true, // set to false to hide this section
-    title: "Work Experience",
+    title: "Projects",
     experiences: [
       {
-        company: "FLY",
-        timeframe: "2022 - Present",
-        role: "Senior Design Engineer",
+        company: "VECTOR",
+        timeframe: "2025 - Present",
+        role: "Full-Stack Developer",
         achievements: [
           <>
-            Redesigned the UI/UX for the FLY platform, resulting in a 20% increase in user
-            engagement and 30% faster load times.
+            Building an AI-powered project management web app focused on reducing context loss in AI-assisted development. Designed the domain model and implemented authentication, CRUD workflows, and a contextual AI chat layer using the Claude API. Responsible for product architecture across frontend, backend, and database design.
+
           </>,
-          <>
-            Spearheaded the integration of AI tools into design workflows, enabling designers to
-            iterate 50% faster.
-          </>,
+        
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-01.jpg",
-            alt: "Once UI Project",
+            src: "/images/projects/project-01/cover-01.png",
+            alt: "Vector project image",
             width: 16,
             height: 9,
           },
         ],
       },
-      {
-        company: "Creativ3",
-        timeframe: "2018 - 2022",
-        role: "Lead Designer",
-        achievements: [
-          <>
-            Developed a design system that unified the brand across multiple platforms, improving
-            design consistency by 40%.
-          </>,
-          <>
-            Led a cross-functional team to launch a new product line, contributing to a 15% increase
-            in overall company revenue.
-          </>,
-        ],
-        images: [],
-      },
+  
     ],
   },
   studies: {
@@ -159,12 +146,12 @@ const about: About = {
     title: "Studies",
     institutions: [
       {
-        name: "University of Jakarta",
-        description: <>Studied software engineering.</>,
+        name: "Georgian College - Canada",
+        description: <>Graduated in Computer Programming. Built real-world projects across web development, databases, OOP, and software engineering fundamentals shipping work with clean structure, not just “it runs.”</>,
       },
       {
-        name: "Build the Future",
-        description: <>Studied online marketing and personal branding.</>,
+        name: "Self-Directed Learning - Always On",
+        description: <>I learn by building. Deep dives into React/Next.js, TypeScript, APIs, system design, and applied AI then I turn the notes into products, not bookmarks.</>,
       },
     ],
   },
