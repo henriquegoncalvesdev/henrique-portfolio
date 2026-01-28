@@ -156,67 +156,119 @@ Based in Brazil. Works globally.
     ],
   },
   technical: {
-    display: true, // set to false to hide this section
-    title: "Technical skills",
-    skills: [
-      {
-        title: "Figma",
-        description: (
-          <>Able to prototype in Figma with Once UI with unnatural speed.</>
-        ),
-        tags: [
-          {
-            name: "Figma",
-            icon: "figma",
-          },
-        ],
-        // optional: leave the array empty if you don't want to display images
-        images: [
-          {
-            src: "/images/projects/project-01/cover-02.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-          {
-            src: "/images/projects/project-01/cover-03.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-        ],
-      },
-      {
-        title: "Next.js",
-        description: (
-          <>Building next gen apps with Next.js + Once UI + Supabase.</>
-        ),
-        tags: [
-          {
-            name: "JavaScript",
-            icon: "javascript",
-          },
-          {
-            name: "Next.js",
-            icon: "nextjs",
-          },
-          {
-            name: "Supabase",
-            icon: "supabase",
-          },
-        ],
-        // optional: leave the array empty if you don't want to display images
-        images: [
-          {
-            src: "/images/projects/project-01/cover-04.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-        ],
-      },
-    ],
-  },
+  display: true, // set to false to hide this section
+  title: "Technical skills",
+  skills: [
+    {
+      title: "React",
+      description: (
+        <>
+          Build clean, reusable UI components with hooks, predictable state, and
+          a focus on performance + maintainability.
+        </>
+      ),
+      tags: [
+        { name: "React", icon: "react" },
+        { name: "Hooks", icon: "sparkle" },
+        { name: "Component Architecture", icon: "grid" },
+      ],
+      images: [
+        {
+          src: "/images/projects/project-01/cover-02.jpg",
+          alt: "React UI components and screens",
+          width: 16,
+          height: 9,
+        },
+        {
+          src: "/images/projects/project-01/cover-03.jpg",
+          alt: "Reusable component system preview",
+          width: 16,
+          height: 9,
+        },
+      ],
+    },
+    {
+      title: "Next.js",
+      description: (
+        <>
+          Ship production-ready apps with routing, server rendering, auth flows,
+          and fast UX.
+        </>
+      ),
+      tags: [
+        { name: "Next.js", icon: "nextjs" },
+        { name: "App Router", icon: "grid" },
+      ],
+      images: [
+        {
+          src: "/images/projects/project-01/cover-04.jpg",
+          alt: "Next.js app screens and dashboard",
+          width: 16,
+          height: 9,
+        },
+      ],
+    },
+    {
+      title: "TypeScript + JavaScript",
+      description: (
+        <>
+          Typed UI, safer refactors, cleaner contracts between components and
+          APIs.
+        </>
+      ),
+      tags: [
+        { name: "TypeScript", icon: "typescript" },
+        { name: "JavaScript", icon: "javascript" },
+        { name: "ES6+", icon: "code" },
+      ],
+      images: [], // optional
+    },
+    {
+      title: "Styling / UI",
+      description: (
+        <>
+          Tailwind or Bootstrap + responsive layouts + design-to-code accuracy.
+        </>
+      ),
+      tags: [
+        { name: "Tailwind", icon: "tailwind" },
+        { name: "Bootstrap", icon: "bootstrap" },
+        { name: "Responsive UI", icon: "mobile" },
+      ],
+      images: [], // optional
+    },
+    {
+      title: "Backend + Database",
+      description: (
+        <>
+          Node/Express + REST + MySQL/Supabase. CRUD, auth, validation.
+        </>
+      ),
+      tags: [
+        { name: "Node.js", icon: "nodejs" },
+        { name: "Express", icon: "express" },
+        { name: "MySQL", icon: "mysql" },
+        { name: "Supabase", icon: "supabase" },
+      ],
+      images: [], // optional
+    },
+    {
+      title: "Tooling / Deploy",
+      description: (
+        <>
+          Git, Vercel, Docker (when needed), and basic CI habits for reliable
+          shipping.
+        </>
+      ),
+      tags: [
+        { name: "Git", icon: "git" },
+        { name: "Vercel", icon: "vercel" },
+        { name: "Docker", icon: "docker" },
+      ],
+      images: [], // optional
+    },
+  ],
+},
 };
 
 const blog: Blog = {
