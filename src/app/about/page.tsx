@@ -250,7 +250,6 @@ export default function About() {
                     title={skill.title}
                     description={skill.description}
                     tags={skill.tags || []}
-                    images={skill.images}
                     index={index}
                   />
                 ))}

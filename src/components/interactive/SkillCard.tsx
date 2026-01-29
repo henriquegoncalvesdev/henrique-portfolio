@@ -1,17 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { Column, Row, Text, Tag, Icon, Media } from "@once-ui-system/core";
+import { Column, Row, Text, Tag, Icon } from "@once-ui-system/core";
 import { GlassCard } from "./GlassCard";
+import { demoRegistry } from "./demos";
 import styles from "./SkillCard.module.scss";
-
-interface SkillImage {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-}
 
 interface SkillTag {
   name: string;
@@ -22,7 +16,6 @@ interface SkillCardProps {
   title: string;
   description: React.ReactNode;
   tags: SkillTag[];
-  images?: SkillImage[];
   index?: number;
 }
 
@@ -59,28 +52,33 @@ const tagVariants: Variants = {
   }),
 };
 
-const imageVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: 0.2 + i * 0.1,
-      duration: 0.4,
-      ease: "easeOut",
-    },
-  }),
-};
+function DemoLoader() {
+  return (
+    <div className={styles.demoLoader}>
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+      >
+        <Icon name="arrowRight" size="m" onBackground="neutral-weak" />
+      </motion.div>
+      <Text variant="body-default-s" onBackground="neutral-weak">
+        Loading demo...
+      </Text>
+    </div>
+  );
+}
 
 export function SkillCard({
   title,
   description,
   tags,
-  images = [],
   index = 0,
 }: SkillCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const hasImages = images.length > 0;
+  
+  // Check if there's a demo for this skill
+  const DemoComponent = demoRegistry[title];
+  const hasDemo = !!DemoComponent;
 
   return (
     <GlassCard delay={index} hover={true} onClick={() => setIsExpanded(!isExpanded)}>
@@ -91,6 +89,15 @@ export function SkillCard({
             <Text id={title} variant="heading-strong-l">
               {title}
             </Text>
+            {hasDemo && (
+              <motion.div
+                className={styles.interactiveBadge}
+                animate={{ opacity: isExpanded ? 0 : 1 }}
+              >
+                <Icon name="sparkle" size="xs" />
+                <span>Interactive</span>
+              </motion.div>
+            )}
           </Row>
           <motion.div
             animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -132,6 +139,7 @@ export function SkillCard({
               animate="expanded"
               exit="collapsed"
               style={{ overflow: "hidden" }}
+              onClick={(e) => e.stopPropagation()}
             >
               <Column gap="16" paddingTop="8">
                 {/* Description */}
@@ -139,38 +147,11 @@ export function SkillCard({
                   {description}
                 </Text>
 
-                {/* Images */}
-                {hasImages && (
-                  <Row fillWidth gap="12" wrap paddingTop="8">
-                    {images.map((image, imgIndex) => (
-                      <motion.div
-                        key={`${title}-img-${imgIndex}`}
-                        variants={imageVariants}
-                        initial="hidden"
-                        animate="visible"
-                        custom={imgIndex}
-                        className={styles.imageWrapper}
-                      >
-                        <Row
-                          border="neutral-medium"
-                          radius="m"
-                          style={{
-                            aspectRatio: `${image.width}/${image.height}`,
-                            minWidth: "200px",
-                            maxWidth: "300px",
-                          }}
-                        >
-                          <Media
-                            enlarge
-                            radius="m"
-                            sizes="300px"
-                            alt={image.alt}
-                            src={image.src}
-                          />
-                        </Row>
-                      </motion.div>
-                    ))}
-                  </Row>
+                {/* Interactive Demo */}
+                {hasDemo && (
+                  <Suspense fallback={<DemoLoader />}>
+                    <DemoComponent />
+                  </Suspense>
                 )}
               </Column>
             </motion.div>
@@ -178,9 +159,9 @@ export function SkillCard({
         </AnimatePresence>
 
         {/* Hint for expandable content */}
-        {!isExpanded && (hasImages || description) && (
+        {!isExpanded && (
           <Text variant="body-default-s" onBackground="neutral-weak" className={styles.hint}>
-            Click to {hasImages ? "see examples" : "expand"}
+            Click to {hasDemo ? "try interactive demo" : "expand"}
           </Text>
         )}
       </Column>
