@@ -1,0 +1,142 @@
+@use "../breakpoints.scss" as breakpoints;
+
+.timeline {
+  position: relative;
+}
+
+.timelineItem {
+  position: relative;
+  padding-bottom: var(--static-space-32);
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.track {
+  position: relative;
+  width: 40px;
+  min-width: 40px;
+  padding-top: 8px;
+
+  @media (max-width: breakpoints.$s) {
+    width: 32px;
+    min-width: 32px;
+  }
+}
+
+.dot {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--brand-solid-strong);
+  z-index: 2;
+  box-shadow: 0 0 0 4px var(--brand-alpha-weak);
+
+  @media (max-width: breakpoints.$s) {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.dotPulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--brand-solid-strong);
+  z-index: 1;
+}
+
+.line {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: calc(100% - 8px);
+  background: linear-gradient(
+    to bottom,
+    var(--brand-solid-strong) 0%,
+    var(--brand-alpha-medium) 50%,
+    var(--neutral-alpha-weak) 100%
+  );
+  transform-origin: top;
+  z-index: 1;
+
+  @media (max-width: breakpoints.$s) {
+    top: 20px;
+  }
+}
+
+.content {
+  flex: 1;
+  padding-left: var(--static-space-16);
+
+  @media (max-width: breakpoints.$s) {
+    padding-left: var(--static-space-12);
+  }
+}
+
+.timeframe {
+  white-space: nowrap;
+  padding: var(--static-space-4) var(--static-space-12);
+  background: var(--neutral-alpha-weak);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+}
+
+.achievements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.achievementItem {
+  position: relative;
+  padding-left: var(--static-space-16);
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-alpha-strong);
+  }
+}
+
+.imageWrapper {
+  flex: 1 1 auto;
+  min-width: 180px;
+  max-width: 280px;
+
+  @media (max-width: breakpoints.$s) {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+.imageContainer {
+  width: 100%;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Light mode adjustments
+:global([data-theme="light"]) {
+  .timeframe {
+    background: var(--neutral-alpha-medium);
+  }
+
+  .imageContainer:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+}

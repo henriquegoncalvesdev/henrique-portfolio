@@ -11,4 +11,4 @@ export { CustomMDX } from "@/components/mdx";
 export { MatrixRain } from "@/components/MatrixRain";
 
 // Interactive components
-export { GlassCard, SkillCard } from "@/components/interactive";
+export { GlassCard, SkillCard, Timeline, TimelineItem } from "@/components/interactive";
