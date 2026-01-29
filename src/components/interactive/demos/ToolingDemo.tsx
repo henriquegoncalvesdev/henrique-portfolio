@@ -27,10 +27,14 @@ export function ToolingDemo() {
     pipelineSteps.reduce((acc, step) => ({ ...acc, [step.id]: "pending" }), {})
   );
   const [isRunning, setIsRunning] = useState(false);
-  const [currentLog, setCurrentLog] = useState<string[]>([]);
+  const [currentLog, setCurrentLog] = useState<Array<{ id: string; message: string }>>([]);
 
   const addLog = useCallback((message: string) => {
-    setCurrentLog((prev) => [...prev.slice(-4), `[${new Date().toLocaleTimeString()}] ${message}`]);
+    const logEntry = {
+      id: `${Date.now()}-${Math.random()}`,
+      message: `[${new Date().toLocaleTimeString()}] ${message}`
+    };
+    setCurrentLog((prev) => [...prev.slice(-4), logEntry]);
   }, []);
 
   const runPipeline = async () => {
@@ -174,13 +178,13 @@ export function ToolingDemo() {
               Click "Run Pipeline" to start
             </span>
           ) : (
-            currentLog.map((log, i) => (
+            currentLog.map((log, index) => (
               <motion.div
-                key={i}
+                key={`${log}-${index}`}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
               >
-                {log}
+                {log.message}
               </motion.div>
             ))
           )}

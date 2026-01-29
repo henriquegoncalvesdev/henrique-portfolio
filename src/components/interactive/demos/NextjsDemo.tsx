@@ -84,7 +84,7 @@ export function NextjsDemo() {
                 <div className={styles.renderFlow}>
                   {mode.steps.map((step, index) => (
                     <motion.div
-                      key={step}
+                      key={`${mode.id}-step-${index}`}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}

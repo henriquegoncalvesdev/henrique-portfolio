@@ -120,9 +120,9 @@ export function StylingDemo() {
               </motion.div>
 
               <Row gap="8" wrap style={{ justifyContent: currentBreakpoint === "mobile" ? "center" : "flex-start" }}>
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3].map((card) => (
                   <motion.div
-                    key={i}
+                    key={`card-${card}`}
                     layout
                     style={{
                       width: currentBreakpoint === "mobile" ? "100%" : currentBreakpoint === "tablet" ? "45%" : "30%",
@@ -132,7 +132,7 @@ export function StylingDemo() {
                       textAlign: "center",
                     }}
                   >
-                    <Text variant="body-default-xs">Card {i}</Text>
+                    <Text variant="body-default-xs">Card {card}</Text>
                   </motion.div>
                 ))}
               </Row>
