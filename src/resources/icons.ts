@@ -15,6 +15,7 @@ import {
   HiSparkles,
   HiCodeBracket,
   HiDevicePhoneMobile,
+  HiChevronDown,
 } from "react-icons/hi2";
 
 import {
@@ -90,6 +91,7 @@ export const iconLibrary: Record<string, IconType> = {
   git: SiGit,
   vercel: SiVercel,
   docker: SiDocker,
+  chevronDown: HiChevronDown,
 };
 
 export type IconLibrary = typeof iconLibrary;

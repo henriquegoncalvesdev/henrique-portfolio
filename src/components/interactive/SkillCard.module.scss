@@ -1,0 +1,53 @@
+@use "../breakpoints.scss" as breakpoints;
+
+.expandIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.tag {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.imageWrapper {
+  flex: 1 1 auto;
+  min-width: 200px;
+  max-width: 300px;
+
+  @media (max-width: breakpoints.$s) {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+.hint {
+  opacity: 0.6;
+  font-size: 0.75rem;
+  transition: opacity 0.2s ease;
+}
+
+// Light mode
+:global([data-theme="light"]) {
+  .expandIcon {
+    background: rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

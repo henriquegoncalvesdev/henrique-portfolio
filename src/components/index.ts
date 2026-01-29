@@ -9,3 +9,6 @@ export { ScrollToHash } from "@/components/ScrollToHash";
 export { ThemeToggle } from "@/components/ThemeToggle";
 export { CustomMDX } from "@/components/mdx";
 export { MatrixRain } from "@/components/MatrixRain";
+
+// Interactive components
+export { GlassCard, SkillCard } from "@/components/interactive";
