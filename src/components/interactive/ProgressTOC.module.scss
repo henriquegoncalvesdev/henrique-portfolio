@@ -1,0 +1,172 @@
+@use "../breakpoints.scss" as breakpoints;
+
+.container {
+  display: flex;
+  gap: var(--static-space-16);
+  position: relative;
+}
+
+.progressTrack {
+  width: 3px;
+  background: var(--neutral-alpha-weak);
+  border-radius: var(--radius-full);
+  position: relative;
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--brand-solid-strong) 0%,
+    var(--brand-solid-medium) 100%
+  );
+  border-radius: var(--radius-full);
+  transition: height 0.1s ease-out;
+}
+
+.nav {
+  flex: 1;
+}
+
+.section {
+  display: flex;
+  gap: var(--static-space-12);
+  position: relative;
+}
+
+.sectionTrack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12px;
+  position: relative;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neutral-alpha-medium);
+  flex-shrink: 0;
+  z-index: 2;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 2px var(--surface-background);
+}
+
+.dotActive {
+  background: var(--brand-solid-strong);
+  box-shadow: 
+    0 0 0 3px var(--surface-background),
+    0 0 0 5px var(--brand-alpha-medium);
+}
+
+.dotPast {
+  background: var(--brand-solid-medium);
+}
+
+.sectionLine {
+  width: 2px;
+  flex: 1;
+  min-height: 20px;
+  background: var(--neutral-alpha-weak);
+  margin-top: var(--static-space-4);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.sectionLineFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--brand-solid-medium);
+  transition: height 0.1s ease-out;
+}
+
+.sectionContent {
+  flex: 1;
+  padding-top: 0;
+}
+
+.sectionButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: block;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.sectionButtonActive {
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.subItems {
+  display: flex;
+  flex-direction: column;
+  gap: var(--static-space-8);
+  padding-top: var(--static-space-12);
+  padding-left: var(--static-space-4);
+  overflow: hidden;
+}
+
+.subItemButton {
+  display: flex;
+  align-items: center;
+  gap: var(--static-space-8);
+  background: none;
+  border: none;
+  padding: var(--static-space-4) 0;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.subItemButtonActive {
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.subDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--neutral-alpha-medium);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.subDotActive {
+  background: var(--brand-solid-medium);
+  box-shadow: 0 0 0 2px var(--brand-alpha-weak);
+}
+
+// Light mode adjustments
+:global([data-theme="light"]) {
+  .dot {
+    box-shadow: 0 0 0 2px var(--surface-background);
+  }
+
+  .dotActive {
+    box-shadow: 
+      0 0 0 3px var(--surface-background),
+      0 0 0 5px var(--brand-alpha-medium);
+  }
+}

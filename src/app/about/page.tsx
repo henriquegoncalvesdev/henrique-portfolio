@@ -13,9 +13,8 @@ import {
   Row,
 } from "@once-ui-system/core";
 import { baseURL, about, person, social } from "@/resources";
-import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
-import { SkillCard, Timeline } from "@/components/interactive";
+import { SkillCard, Timeline, ProgressTOC } from "@/components/interactive";
 import React from "react";
 
 export async function generateMetadata() {
@@ -75,7 +74,7 @@ export default function About() {
           gap="32"
           s={{ hide: true }}
         >
-          <TableOfContents structure={structure} about={about} />
+          <ProgressTOC structure={structure} showSubItems={about.tableOfContent.subItems} />
         </Column>
       )}
       <Row fillWidth s={{ direction: "column"}} horizontal="center">
