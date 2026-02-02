@@ -71,7 +71,7 @@ export function ReactDemo() {
         <div className={styles.stateDisplay}>
           <AnimatePresence mode="wait">
             <motion.div
-              key={count}
+              key={`count-${count}`}
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}

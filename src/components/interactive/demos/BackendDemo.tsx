@@ -138,7 +138,7 @@ export function BackendDemo() {
             <Text variant="label-default-s">Status:</Text>
             <AnimatePresence mode="wait">
               <motion.div
-                key={status}
+                key={`status-${status}`}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
@@ -154,6 +154,7 @@ export function BackendDemo() {
             <AnimatePresence mode="wait">
               {status === "loading" && (
                 <motion.div
+                  key="loading"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -163,6 +164,7 @@ export function BackendDemo() {
               )}
               {status === "success" && data && (
                 <motion.pre
+                  key="success"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -172,6 +174,7 @@ export function BackendDemo() {
               )}
               {status === "error" && (
                 <motion.div
+                  key="error"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -182,6 +185,7 @@ export function BackendDemo() {
               )}
               {status === "idle" && (
                 <motion.div
+                  key="idle"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   style={{ color: "var(--neutral-on-background-weak)" }}

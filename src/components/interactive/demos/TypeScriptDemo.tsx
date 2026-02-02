@@ -54,7 +54,7 @@ export function TypeScriptDemo() {
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={typeInfo.type}
+            key={`type-${typeInfo.type}`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
