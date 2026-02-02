@@ -112,7 +112,7 @@ export function SkillCard({
         <Row wrap gap="8">
           {tags.map((tag, tagIndex) => (
             <motion.div
-              key={`${title}-${tag.name}`}
+              key={`${title}-tag-${tagIndex}`}
               variants={tagVariants}
               initial="hidden"
               whileInView="visible"

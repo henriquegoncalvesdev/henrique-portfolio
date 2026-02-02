@@ -37,17 +37,17 @@ export default function About() {
     {
       title: about.work.title,
       display: about.work.display,
-      items: about.work.experiences.map((experience) => experience.company),
+      items: Array.from(new Set(about.work.experiences.map((experience) => experience.company))),
     },
     {
       title: about.studies.title,
       display: about.studies.display,
-      items: about.studies.institutions.map((institution) => institution.name),
+      items: Array.from(new Set(about.studies.institutions.map((institution) => institution.name))),
     },
     {
       title: about.technical.title,
       display: about.technical.display,
-      items: about.technical.skills.map((skill) => skill.title),
+      items: Array.from(new Set(about.technical.skills.map((skill) => skill.title))),
     },
   ];
   return (
@@ -100,8 +100,8 @@ export default function About() {
             </Row>
             {person.languages && person.languages.length > 0 && (
               <Row wrap gap="8">
-                {person.languages.map((language) => (
-                  <Tag key={language} size="l">
+                {person.languages.map((language, index) => (
+                  <Tag key={`${language}-${index}`} size="l">
                     {language}
                   </Tag>
                 ))}
@@ -165,8 +165,8 @@ export default function About() {
               >
                 {social
                   .filter((item) => item.essential && item.link)
-                  .map((item) => (
-                    <React.Fragment key={item.name}>
+                  .map((item, index) => (
+                    <React.Fragment key={`${item.name}-${index}`}>
                       <Row s={{ hide: true }}>
                         <Button
                           href={item.link}
@@ -214,8 +214,8 @@ export default function About() {
                 {about.studies.title}
               </Heading>
               <Column fillWidth gap="l" marginBottom="40">
-                {about.studies.institutions.map((institution, index) => (
-                  <Column key={`${institution.name}-${index}`} fillWidth gap="4">
+                {about.studies.institutions.map((institution) => (
+                  <Column key={institution.id} fillWidth gap="4">
                     <Text id={institution.name} variant="heading-strong-l">
                       {institution.name}
                     </Text>
@@ -241,7 +241,7 @@ export default function About() {
               <Column fillWidth gap="l">
                 {about.technical.skills.map((skill, index) => (
                   <SkillCard
-                    key={`${skill.title}-${index}`}
+                    key={skill.id}
                     title={skill.title}
                     description={skill.description}
                     tags={skill.tags || []}

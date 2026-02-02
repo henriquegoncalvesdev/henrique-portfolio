@@ -175,6 +175,8 @@ export interface About extends BasePageConfig {
     title: string;
     /** List of institutions attended */
     institutions: Array<{
+      /** Unique identifier for the institution */
+      id: string;
       /** Institution name */
       name: string;
       /** Description of studies */
@@ -189,6 +191,8 @@ export interface About extends BasePageConfig {
     title: string;
     /** List of technical skills */
     skills: Array<{
+      /** Unique identifier for the skill */
+      id: string;
       /** Skill title */
       title: string;
       /** Skill description */

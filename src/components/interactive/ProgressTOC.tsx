@@ -219,11 +219,11 @@ export function ProgressTOC({ structure, showSubItems = false }: ProgressTOCProp
                       exit="exit"
                       className={styles.subItems}
                     >
-                      {section.items.map((item) => {
+                      {section.items.map((item, itemIndex) => {
                         const isItemActive = activeItem === item;
                         return (
                           <motion.button
-                            key={item}
+                            key={`${section.title}-${item}-${itemIndex}`}
                             className={`${styles.subItemButton} ${isItemActive ? styles.subItemButtonActive : ""}`}
                             onClick={() => scrollTo(item)}
                             whileHover={{ x: 4 }}

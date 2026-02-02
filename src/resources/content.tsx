@@ -146,10 +146,12 @@ Based in Brazil. Works globally.
     title: "Studies",
     institutions: [
       {
+        id: "georgian-college",
         name: "Georgian College - Canada",
-        description: <>Graduated in Computer Programming. Built real-world projects across web development, databases, OOP, and software engineering fundamentals shipping work with clean structure, not just “it runs.”</>,
+        description: <>Graduated in Computer Programming. Built real-world projects across web development, databases, OOP, and software engineering fundamentals shipping work with clean structure, not just "it runs."</>,
       },
       {
+        id: "self-directed-learning",
         name: "Self-Directed Learning - Always On",
         description: <>I learn by building. Deep dives into React/Next.js, TypeScript, APIs, system design, and applied AI then I turn the notes into products, not bookmarks.</>,
       },
@@ -160,6 +162,7 @@ Based in Brazil. Works globally.
   title: "Technical skills",
   skills: [
     {
+      id: "react",
       title: "React",
       description: (
         <>
@@ -188,6 +191,7 @@ Based in Brazil. Works globally.
       ],
     },
     {
+      id: "nextjs",
       title: "Next.js",
       description: (
         <>
@@ -209,6 +213,7 @@ Based in Brazil. Works globally.
       ],
     },
     {
+      id: "typescript-javascript",
       title: "TypeScript + JavaScript",
       description: (
         <>
@@ -231,6 +236,7 @@ Based in Brazil. Works globally.
       ], // optional
     },
     {
+      id: "styling-ui",
       title: "Styling / UI",
       description: (
         <>
@@ -245,6 +251,7 @@ Based in Brazil. Works globally.
       images: [], // optional
     },
     {
+      id: "backend-database",
       title: "Backend + Database",
       description: (
         <>
@@ -260,6 +267,7 @@ Based in Brazil. Works globally.
       images: [], // optional
     },
     {
+      id: "tooling-deploy",
       title: "Tooling / Deploy",
       description: (
         <>

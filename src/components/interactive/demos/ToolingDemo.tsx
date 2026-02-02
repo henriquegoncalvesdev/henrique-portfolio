@@ -178,9 +178,9 @@ export function ToolingDemo() {
               Click "Run Pipeline" to start
             </span>
           ) : (
-            currentLog.map((log, index) => (
+            currentLog.map((log) => (
               <motion.div
-                key={`${log}-${index}`}
+                key={log.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
               >

@@ -225,7 +225,7 @@ export function Timeline({ experiences }: TimelineProps) {
     <Column fillWidth gap="0" className={styles.timeline}>
       {experiences.map((experience, index) => (
         <TimelineItem
-          key={`${experience.company}-${experience.role}-${index}`}
+          key={`experience-${index}-${experience.company}-${experience.timeframe}`}
           {...experience}
           index={index}
           isLast={index === experiences.length - 1}

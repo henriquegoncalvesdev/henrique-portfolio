@@ -80,11 +80,11 @@ export function NextjsDemo() {
                   </Text>
                 </Column>
 
-                {/* Render flow visualization */}
+                Render flow visualization
                 <div className={styles.renderFlow}>
                   {mode.steps.map((step, index) => (
                     <motion.div
-                      key={`${mode.id}-step-${index}`}
+                      key={`${mode.id}-step-${step}`}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
