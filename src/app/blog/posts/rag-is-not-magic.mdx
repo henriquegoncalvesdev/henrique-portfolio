@@ -204,36 +204,35 @@ This adds latency, so use it wisely. Retrieve 20 candidates fast, rerank to top 
 
 ## The Complete Pipeline
 
-```
-User Query
-    │
-    ▼
-┌─────────────────┐
-│ Query Expansion │ ──→ 3-4 query variants
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Hybrid Search  │ ──→ Vector + BM25 + Fusion
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│    Reranking    │ ──→ LLM-scored relevance
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Context Assembly│ ──→ Format chunks with metadata
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│   LLM Response  │ ──→ Generate with clean context
-└─────────────────┘
-```
+Advanced RAG Retrieval Pipeline
+This workflow outlines a sophisticated retrieval strategy designed to maximize context accuracy by refining the signal-to-noise ratio before the data reaches the generation model.
 
----
+Query Processing
+
+Input: The process begins with the raw User Query.
+
+Query Expansion: The system does not search immediately. Instead, it generates 3-4 distinct query variants to broaden the semantic net and capture different phrasings of the user's intent.
+
+Retrieval Layer
+
+Hybrid Search: A dual-search approach is executed to balance precision and recall:
+
+Vector Search: Captures semantic meaning.
+
+BM25: Captures exact keyword matches.
+
+Fusion: Results from both search methods are combined (likely using Reciprocal Rank Fusion) to create a unified candidate list.
+
+Refinement & Generation
+
+Reranking: Validates the candidate list using an LLM or Cross-Encoder to score each chunk's relevance to the specific query, discarding hallucinations or irrelevant matches.
+
+Context Assembly: The surviving high-quality chunks are formatted and enriched with metadata to ensure the model understands the source structure.
+
+LLM Response: The final answer is generated based on this strictly curated, clean context.
+
+
+
 
 ## What Your Vector DB Won't Tell You
 
