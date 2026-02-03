@@ -1,0 +1,317 @@
+---
+title: "RAG Is Not Magic: Building Search That Actually Understands Your Data"
+publishedAt: "2026-02-02"
+summary: "Vector embeddings won't save you from bad architecture. Here's how to build retrieval that works."
+image: "/images/gallery/gallery_blog_02.png"
+tag: "Engineering"
+---
+
+Vector embeddings won't save you from bad architecture. Here's how to build retrieval that works.
+
+---
+
+## Everyone's Building RAG Wrong
+
+The pitch is seductive: embed your documents, store them in a vector database, and suddenly your chatbot "knows" your entire knowledge base.
+
+The reality is messier.
+
+You embed 10,000 documents. User asks a question. You retrieve the top 5 "most similar" chunks. Three are irrelevant. One is outdated. One is actually useful but gets drowned out by the noise. The LLM hallucinates an answer from the garbage you fed it.
+
+"RAG doesn't work," you conclude.
+
+No — your RAG doesn't work. Let me show you why.
+
+---
+
+## The Embedding Trap
+
+Most tutorials stop here:
+
+```typescript
+// The "just embed everything" approach
+const chunks = splitDocument(document, { chunkSize: 500 });
+const embeddings = await openai.embeddings.create({
+  model: 'text-embedding-3-small',
+  input: chunks.map(c => c.text)
+});
+await vectorDB.upsert(embeddings);
+```
+
+This works for demos. It fails for production because:
+
+1. **Chunk boundaries are arbitrary** — You're cutting sentences in half, splitting context from conclusion
+2. **All chunks look equal** — A header, a footnote, and a key insight all get the same treatment
+3. **Semantic similarity ≠ relevance** — "Company policy on remote work" and "Remote desktop troubleshooting" are semantically similar but completely different topics
+
+---
+
+## Building RAG That Actually Works
+
+### Step 1: Smart Chunking
+
+Stop splitting on character count. Split on meaning.
+
+```typescript
+interface SmartChunk {
+  content: string;
+  metadata: {
+    source: string;
+    section: string;
+    type: 'header' | 'paragraph' | 'list' | 'code' | 'table';
+    parentContext: string; // The heading this chunk falls under
+  };
+}
+
+function smartChunk(document: Document): SmartChunk[] {
+  const sections = splitByHeadings(document);
+  
+  return sections.flatMap(section => {
+    const chunks = splitByParagraph(section.content);
+    
+    return chunks.map(chunk => ({
+      content: chunk,
+      metadata: {
+        source: document.id,
+        section: section.title,
+        type: detectContentType(chunk),
+        parentContext: section.title // Keep the context
+      }
+    }));
+  });
+}
+```
+
+The key insight: **every chunk needs to carry its context**. A paragraph about "the deadline" is useless without knowing it's from "Q3 Marketing Plan."
+
+### Step 2: Hybrid Search
+
+Vector search finds semantically similar content. Keyword search finds exact matches. You need both.
+
+```typescript
+async function hybridSearch(query: string, options: SearchOptions) {
+  // Vector search for semantic similarity
+  const vectorResults = await vectorDB.search({
+    embedding: await embed(query),
+    limit: options.limit * 2, // Over-fetch for reranking
+    threshold: 0.7
+  });
+  
+  // BM25 for keyword matching
+  const keywordResults = await fullTextSearch({
+    query,
+    limit: options.limit * 2
+  });
+  
+  // Reciprocal Rank Fusion to combine
+  const combined = reciprocalRankFusion([vectorResults, keywordResults]);
+  
+  return combined.slice(0, options.limit);
+}
+
+function reciprocalRankFusion(resultSets: SearchResult[][]): SearchResult[] {
+  const scores = new Map<string, number>();
+  const k = 60; // Fusion constant
+  
+  resultSets.forEach(results => {
+    results.forEach((result, rank) => {
+      const current = scores.get(result.id) || 0;
+      scores.set(result.id, current + 1 / (k + rank + 1));
+    });
+  });
+  
+  return [...scores.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([id]) => getResult(id));
+}
+```
+
+Vector-only search fails on proper nouns, product names, and technical terms. Keyword-only search fails on synonyms and paraphrasing. Hybrid catches both.
+
+### Step 3: Query Expansion
+
+Users ask bad questions. Your system needs to handle that.
+
+```typescript
+async function expandQuery(originalQuery: string): Promise<string[]> {
+  const expansion = await claude.messages.create({
+    model: 'claude-3-haiku', // Fast and cheap for this task
+    system: `Generate 3 alternative phrasings of this search query. 
+Return only the queries, one per line, no numbering.`,
+    messages: [{ role: 'user', content: originalQuery }]
+  });
+  
+  const alternatives = expansion.content[0].text.split('\n').filter(Boolean);
+  return [originalQuery, ...alternatives];
+}
+
+// Search with all variants
+async function enhancedSearch(query: string) {
+  const queries = await expandQuery(query);
+  const allResults = await Promise.all(
+    queries.map(q => hybridSearch(q, { limit: 5 }))
+  );
+  
+  return deduplicateAndRank(allResults.flat());
+}
+```
+
+User asks: "How do I get my money back?"  
+Expanded to: "How do I get my money back?", "refund policy", "return process", "cancellation and refund"
+
+Now you're searching for what they meant, not just what they typed.
+
+### Step 4: Reranking
+
+Initial retrieval is fast but dumb. Reranking is slow but smart. Use both.
+
+```typescript
+async function rerankResults(
+  query: string, 
+  candidates: SearchResult[]
+): Promise<SearchResult[]> {
+  // Use a cross-encoder or LLM for reranking
+  const scored = await Promise.all(
+    candidates.map(async (result) => {
+      const relevance = await scoreRelevance(query, result.content);
+      return { ...result, relevanceScore: relevance };
+    })
+  );
+  
+  return scored
+    .filter(r => r.relevanceScore > 0.5) // Drop irrelevant
+    .sort((a, b) => b.relevanceScore - a.relevanceScore);
+}
+
+async function scoreRelevance(query: string, content: string): Promise<number> {
+  const response = await claude.messages.create({
+    model: 'claude-3-haiku',
+    system: `Rate how relevant this content is to the query.
+Return only a number from 0 to 1.`,
+    messages: [{ 
+      role: 'user', 
+      content: `Query: ${query}\n\nContent: ${content}` 
+    }]
+  });
+  
+  return parseFloat(response.content[0].text);
+}
+```
+
+This adds latency, so use it wisely. Retrieve 20 candidates fast, rerank to top 5, send those to your main LLM.
+
+---
+
+## The Complete Pipeline
+
+```
+User Query
+    │
+    ▼
+┌─────────────────┐
+│ Query Expansion │ ──→ 3-4 query variants
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Hybrid Search  │ ──→ Vector + BM25 + Fusion
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│    Reranking    │ ──→ LLM-scored relevance
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Context Assembly│ ──→ Format chunks with metadata
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│   LLM Response  │ ──→ Generate with clean context
+└─────────────────┘
+```
+
+---
+
+## What Your Vector DB Won't Tell You
+
+### Embedding Models Matter
+
+Not all embeddings are equal. For technical documentation:
+
+| Model | Strength | Weakness |
+|-------|----------|----------|
+| `text-embedding-3-small` | Fast, cheap | Weaker on technical jargon |
+| `text-embedding-3-large` | More nuanced | 6x the cost |
+| `voyage-code-2` | Code-aware | Overkill for prose |
+
+Test with your actual data. The "best" model depends on your domain.
+
+### Freshness Is a Feature
+
+Embeddings go stale. When documents update:
+
+```typescript
+// Bad: Re-embed everything on any change
+await reindexEntireDatabase();
+
+// Good: Track and update incrementally
+async function handleDocumentUpdate(docId: string) {
+  const doc = await getDocument(docId);
+  const oldChunks = await getChunksForDocument(docId);
+  const newChunks = smartChunk(doc);
+  
+  // Diff and update only what changed
+  const { added, removed, unchanged } = diffChunks(oldChunks, newChunks);
+  
+  await vectorDB.delete(removed.map(c => c.id));
+  await vectorDB.upsert(await embedChunks(added));
+}
+```
+
+### Metadata Is Your Secret Weapon
+
+The best retrieval systems filter before they search:
+
+```typescript
+// User is asking about billing
+const results = await vectorDB.search({
+  embedding: queryEmbedding,
+  filter: {
+    category: 'billing', // Narrow the search space
+    updatedAfter: '2024-01-01' // Only recent docs
+  }
+});
+```
+
+A filtered search over 1,000 relevant documents beats an unfiltered search over 100,000.
+
+---
+
+## The Debugging Checklist
+
+When RAG isn't working, check these in order:
+
+1. **Are you retrieving the right chunks?** Log your search results before LLM generation. Actually read them.
+2. **Is the relevant information in your database at all?** Search manually. If you can't find it, neither can the system.
+3. **Are your chunks too big or too small?** Too big = noise. Too small = lost context.
+4. **Is your embedding model appropriate?** Technical docs need technical embeddings.
+5. **Are you asking the LLM to do too much?** Five relevant chunks > twenty vaguely related ones.
+
+---
+
+## RAG Is Information Architecture
+
+The tooling is the easy part. Pinecone, Weaviate, pgvector — they all work.
+
+The hard part is understanding your data well enough to structure it for retrieval. That's not an AI problem. That's an information architecture problem that happens to use AI.
+
+Build for the queries your users actually ask, not the queries you imagine they'll ask. Log everything. Iterate constantly.
+
+That's how you build RAG that works.
+
+---
+
+*Building a RAG system and hitting retrieval quality issues? I've built these for production apps. [Let's debug it together](/contact).*

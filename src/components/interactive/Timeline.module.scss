@@ -72,6 +72,11 @@
 .content {
   flex: 1;
   padding-left: var(--static-space-16);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &:hover {
+    transform: translateX(4px);
+  }
 
   @media (max-width: breakpoints.$s) {
     padding-left: var(--static-space-12);
@@ -119,14 +124,39 @@
   }
 }
 
-.imageContainer {
+.mediaContainer {
   width: 100%;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--neutral-border-medium);
+  border-radius: var(--radius-m);
+  transition: box-shadow 0.3s ease;
+  position: relative;
 
   &:hover {
-    transform: scale(1.02);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.videoContainer {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--neutral-border-medium);
+  border-radius: var(--radius-m);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  
+  &:hover::after {
+    opacity: 1;
   }
 }
 
@@ -136,7 +166,7 @@
     background: var(--neutral-alpha-medium);
   }
 
-  .imageContainer:hover {
+  .mediaContainer:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 }

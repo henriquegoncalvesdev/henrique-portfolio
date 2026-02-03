@@ -38,10 +38,14 @@ import {
   SiNodedotjs,
   SiExpress,
   SiMysql,
+  SiPostgresql,
   SiGit,
   SiVercel,
   SiDocker,
+  SiGithubactions,
 } from "react-icons/si";
+
+import { VscAzure } from "react-icons/vsc";
 
 import { FaDiscord, FaGithub, FaLinkedin, FaX, FaThreads, FaInstagram, FaXTwitter, FaFacebook, FaPinterest, FaWhatsapp, FaReddit, FaTelegram, } from "react-icons/fa6";
 
@@ -88,9 +92,12 @@ export const iconLibrary: Record<string, IconType> = {
   nodejs: SiNodedotjs,
   express: SiExpress,
   mysql: SiMysql,
+  postgresql: SiPostgresql,
   git: SiGit,
   vercel: SiVercel,
   docker: SiDocker,
+  azure: VscAzure,
+  githubactions: SiGithubactions,
   chevronDown: HiChevronDown,
 };
 

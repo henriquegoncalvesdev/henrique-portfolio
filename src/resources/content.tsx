@@ -9,7 +9,7 @@ const person: Person = {
   avatar: "/images/avatar.jpg",
   email: "henriquegoncalvesdev@gmail.com",
   location: "America/Sao_Paulo", // Timezone for time display functionality
-  locationDisplay: "🇧🇷 Brazil", // Display location shown to users
+  locationDisplay: "Brazil", // Display location shown to users
   languages: ["English", "Portuguese"], // optional: Leave the array empty if you don't want to display languages
 };
 
@@ -34,18 +34,6 @@ const social: Social = [
     icon: "linkedin",
     link: "https://www.linkedin.com/in/henriquegoncalvesdev/",
     essential: true,
-  },
-  {
-    name: "Instagram",
-    icon: "instagram",
-    link: "https://www.instagram.com/once_ui/",
-    essential: false,
-  },
-  {
-    name: "Threads",
-    icon: "threads",
-    link: "https://www.threads.com/@once_ui",
-    essential: false,
   },
   {
     name: "Email",
@@ -105,11 +93,9 @@ const about: About = {
       <>
         
 
-Henrique builds AI-powered web apps from architecture to deployment.
-His work sits at the intersection of solid engineering and practical AI: context-aware features, intelligent workflows, and interfaces designed to reduce friction rather than add complexity.
-The stack: React, Next.js, TypeScript on the front. Node, Express, SQL, and vector databases on the back. LLMs including OpenAI, Claude, and Gemini integrated into production systems.
-He's most useful when a project needs one person who can own the full picture product thinking, technical decisions, and shipping code that holds up.
-Based in Brazil. Works globally.
+I build web apps that think.
+Full-stack development meets practical AI I integrate LLMs into production systems, not just prototypes. From React to LLM API, I own the architecture, ship the code, and make sure it actually works at scale.
+Based in Brazil. Working globally.
       </>
     ),
   },
@@ -121,18 +107,29 @@ Based in Brazil. Works globally.
         company: "VECTOR",
         timeframe: "2025 - Present",
         role: "Full-Stack Developer",
+        featured: true,
+        stack: ["React", "Claude API", "Supabase"],
         achievements: [
           <>
-            Building an AI-powered project management web app focused on reducing context loss in AI-assisted development. Designed the domain model and implemented authentication, CRUD workflows, and a contextual AI chat layer using the Claude API. Responsible for product architecture across frontend, backend, and database design.
-
+            <strong>Problem:</strong> Developers lose hours switching between code and AI chats, manually crafting context for LLMs.
           </>,
-        
+          <>
+            <strong>Solution:</strong> Reduced context-switching by generating AI-ready prompts from project structure automatically.
+          </>,
+          <>
+            <strong>Outcome:</strong> Streamlined AI-assisted development workflow with automated context generation.
+          </>,
         ],
         images: [
-          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/video-01.mp4",
+            alt: "Vector project demo",
+            width: 16,
+            height: 9,
+          },
           {
             src: "/images/projects/project-01/cover-01.png",
-            alt: "Vector project image",
+            alt: "Vector project screenshot",
             width: 16,
             height: 9,
           },
@@ -143,17 +140,12 @@ Based in Brazil. Works globally.
   },
   studies: {
     display: true, // set to false to hide this section
-    title: "Studies",
+    title: "Background",
     institutions: [
       {
-        id: "georgian-college",
-        name: "Georgian College - Canada",
-        description: <>Graduated in Computer Programming. Built real-world projects across web development, databases, OOP, and software engineering fundamentals shipping work with clean structure, not just "it runs."</>,
-      },
-      {
-        id: "self-directed-learning",
-        name: "Self-Directed Learning - Always On",
-        description: <>I learn by building. Deep dives into React/Next.js, TypeScript, APIs, system design, and applied AI then I turn the notes into products, not bookmarks.</>,
+        id: "education",
+        name: "CS @ Georgian College (Honors) • Azure Certified",
+        description: <></>,
       },
     ],
   },
@@ -255,14 +247,14 @@ Based in Brazil. Works globally.
       title: "Backend + Database",
       description: (
         <>
-          Node/Express + REST + MySQL/Supabase. CRUD, auth, validation.
+          Node/Express + REST + MySQL/PostgreSQL. CRUD, auth, validation.
         </>
       ),
       tags: [
         { name: "Node.js", icon: "nodejs" },
         { name: "Express", icon: "express" },
         { name: "MySQL", icon: "mysql" },
-        { name: "Supabase", icon: "supabase" },
+        { name: "PostgreSQL", icon: "postgresql" },
       ],
       images: [], // optional
     },
@@ -271,14 +263,16 @@ Based in Brazil. Works globally.
       title: "Tooling / Deploy",
       description: (
         <>
-          Git, Vercel, Docker (when needed), and basic CI habits for reliable
+          Git, GitHub Actions, Vercel, Docker, Azure, and basic CI habits for reliable
           shipping.
         </>
       ),
       tags: [
         { name: "Git", icon: "git" },
+        { name: "GitHub Actions", icon: "githubactions" },
         { name: "Vercel", icon: "vercel" },
         { name: "Docker", icon: "docker" },
+        { name: "Azure", icon: "azure" },
       ],
       images: [], // optional
     },
@@ -289,7 +283,7 @@ Based in Brazil. Works globally.
 const blog: Blog = {
   path: "/blog",
   label: "Blog",
-  title: "Writing about design and tech...",
+  title: "Writing about AI and Full Stack Development",
   description: `Read what ${person.name} has been up to recently`,
   // Create new blog posts by adding a new .mdx file to app/blog/posts
   // All posts will be listed on the /blog route
@@ -297,7 +291,7 @@ const blog: Blog = {
 
 const work: Work = {
   path: "/work",
-  label: "Work",
+  label: "Projects",
   title: `Projects – ${person.name}`,
   description: `Design and dev projects by ${person.name}`,
   // Create new project pages by adding a new .mdx file to app/blog/posts
@@ -312,6 +306,11 @@ const gallery: Gallery = {
   // Images by https://lorant.one
   // These are placeholder images, replace with your own
   images: [
+    {
+      src: "/images/gallery/gallery_blog_01.png",
+      alt: "image",
+      orientation: "horizontal",
+    },
     {
       src: "/images/gallery/horizontal-1.jpg",
       alt: "image",

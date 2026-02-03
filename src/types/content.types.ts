@@ -29,6 +29,8 @@ export type Person = {
   locationDisplay?: string;
   /** Languages spoken */
   languages?: string[];
+  /** Credentials or background info (e.g. CS Degree, Certifications) */
+  credentials?: string;
 };
 
 /**
@@ -154,6 +156,10 @@ export interface About extends BasePageConfig {
       role: string;
       /** Achievements at the company */
       achievements: React.ReactNode[];
+      /** Whether this experience is featured */
+      featured?: boolean;
+      /** Technology stack used */
+      stack?: string[];
       /** Images related to the experience */
       images?: Array<{
         /** Image source path */
@@ -189,7 +195,7 @@ export interface About extends BasePageConfig {
     display: boolean;
     /** Title for the technical skills section */
     title: string;
-    /** List of technical skills */
+    /** List of technical skills (Legacy) */
     skills: Array<{
       /** Unique identifier for the skill */
       id: string;
@@ -214,6 +220,20 @@ export interface About extends BasePageConfig {
         height: number;
       }>;
     }>;
+    /** Tier 1: Core Stack (Visual Badges) */
+    tier1?: {
+        title: string;
+        skills: Array<{ name: string; icon: string }>;
+    };
+    /** Tier 2: AI Specialization (Interactive Modules) */
+    tier2?: {
+        title: string;
+        demos: Array<{
+             id: string;
+             title: string;
+             description: React.ReactNode;
+        }>;
+    };
   };
 }
 

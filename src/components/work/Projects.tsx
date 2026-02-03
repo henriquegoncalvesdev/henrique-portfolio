@@ -36,6 +36,11 @@ export function Projects({ range, exclude }: ProjectsProps) {
           content={post.content}
           avatars={post.metadata.team?.map((member) => ({ src: member.avatar })) || []}
           link={post.metadata.link || ""}
+          featured={post.metadata.featured || false}
+          problem={post.metadata.problem}
+          solution={post.metadata.solution}
+          stack={post.metadata.stack}
+          outcome={post.metadata.outcome}
         />
       ))}
     </Column>

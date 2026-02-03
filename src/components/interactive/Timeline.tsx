@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { Column, Row, Text, Media } from "@once-ui-system/core";
+import { Column, Row, Text, Media, Tag } from "@once-ui-system/core";
 import { GlassCard } from "./GlassCard";
 import styles from "./Timeline.module.scss";
 import type { ReactNode } from "react";
@@ -21,6 +21,8 @@ interface TimelineItemProps {
   images?: TimelineImage[];
   index: number;
   isLast?: boolean;
+  featured?: boolean;
+  stack?: string[];
 }
 
 const dotVariants: Variants = {
@@ -92,6 +94,8 @@ export function TimelineItem({
   images = [],
   index,
   isLast = false,
+  featured = false,
+  stack = [],
 }: TimelineItemProps) {
   return (
     <Row fillWidth className={styles.timelineItem}>
@@ -141,9 +145,14 @@ export function TimelineItem({
             {/* Header */}
             <Row fillWidth horizontal="between" vertical="start" wrap gap="8">
               <Column gap="4">
-                <Text id={company} variant="heading-strong-l">
-                  {company}
-                </Text>
+                <Row gap="12" vertical="center" wrap>
+                  <Text id={company} variant="heading-strong-l">
+                    {company}
+                  </Text>
+                  {featured && (
+                    <Tag size="s" label="Featured" onSolid="brand-medium" />
+                  )}
+                </Row>
                 <Text variant="body-default-s" onBackground="brand-weak">
                   {role}
                 </Text>
@@ -170,37 +179,52 @@ export function TimelineItem({
               ))}
             </Column>
 
-            {/* Images */}
+            {/* Tech Stack */}
+            {stack.length > 0 && (
+              <Row gap="8" wrap paddingTop="8">
+                {stack.map((tech, i) => (
+                  <Tag
+                    key={`${company}-tech-${i}`}
+                    size="s"
+                    label={tech}
+                    onSolid="neutral-weak"
+                  />
+                ))}
+              </Row>
+            )}
+
+            {/* Images & Videos */}
             {images.length > 0 && (
               <Row fillWidth gap="12" wrap paddingTop="8">
-                {images.map((image, i) => (
-                  <motion.div
-                    key={`${company}-img-${i}`}
-                    variants={imageVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    custom={i}
-                    className={styles.imageWrapper}
-                  >
-                    <Row
-                      border="neutral-medium"
-                      radius="m"
-                      style={{
-                        aspectRatio: `${image.width}/${image.height}`,
-                      }}
-                      className={styles.imageContainer}
+                {images.map((image, i) => {
+                  const isVideo = image.src.endsWith('.mp4') || image.src.endsWith('.webm');
+                  return (
+                    <motion.div
+                      key={`${company}-media-${i}`}
+                      variants={imageVariants}
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true }}
+                      custom={i}
+                      className={styles.imageWrapper}
                     >
-                      <Media
-                        enlarge
-                        radius="m"
-                        sizes="300px"
-                        alt={image.alt}
-                        src={image.src}
-                      />
-                    </Row>
-                  </motion.div>
-                ))}
+                      <div
+                        style={{
+                          aspectRatio: `${image.width}/${image.height}`,
+                        }}
+                        className={isVideo ? styles.videoContainer : styles.mediaContainer}
+                      >
+                        <Media
+                          enlarge
+                          radius="m"
+                          sizes="300px"
+                          alt={image.alt}
+                          src={image.src}
+                        />
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </Row>
             )}
           </Column>
@@ -217,6 +241,8 @@ interface TimelineProps {
     timeframe: string;
     achievements: ReactNode[];
     images?: TimelineImage[];
+    featured?: boolean;
+    stack?: string[];
   }[];
 }
 

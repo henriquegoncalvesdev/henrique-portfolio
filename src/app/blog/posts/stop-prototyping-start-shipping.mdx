@@ -1,0 +1,187 @@
+---
+title: "Stop Prototyping, Start Shipping: LLM Features That Actually Work in Production"
+publishedAt: "2026-02-02"
+summary: "Most 'AI features' die in the demo. Here's how to build ones that survive real users."
+image: "/images/gallery/gallery_blog_01.png"
+tag: "Engineering"
+---
+
+Most "AI features" die in the demo. Here's how to build ones that survive real users.
+
+---
+
+## The Prototype Trap
+
+Every developer has done it. You spin up a quick Next.js app, hit the OpenAI API, watch text stream into a chat bubble, and think: "This is it. This is the future."
+
+Then you try to ship it.
+
+Suddenly you're dealing with rate limits, $47 API bills from a single aggressive user, hallucinated responses that make your app look broken, and latency that turns your snappy interface into a loading screen simulator.
+
+The gap between "works in localhost" and "works in production" is where most AI features go to die.
+
+I've shipped LLM integrations across multiple production apps. Here's what I learned about crossing that gap.
+
+---
+
+## The Three Production Killers
+
+### 1. Cost Explosion
+
+The math looks fine until it isn't.
+
+Let's say you're building a writing assistant. GPT-4 Turbo costs roughly $10 per million input tokens, $30 per million output tokens. Your average request is 2,000 tokens in, 500 out. That's $0.02 + $0.015 = $0.035 per request.
+
+Sounds cheap. But if a user makes 50 requests in a session (they will), that's $1.75 per active user per day. Get 1,000 daily actives and you're burning $1,750/day — $52,500/month — before you've made a cent.
+
+**The fix:** Tiered model routing.
+
+```typescript
+// Route based on task complexity
+function selectModel(task: TaskType, userTier: string): Model {
+  // Simple tasks: fast and cheap
+  if (task.complexity === 'low') {
+    return 'claude-3-haiku';
+  }
+
+  // Premium users get the good stuff
+  if (userTier === 'pro' && task.complexity === 'high') {
+    return 'claude-sonnet-4-20250514';
+  }
+
+  // Default: balanced
+  return 'claude-3-haiku';
+}
+```
+
+Not every request needs your most expensive model. Classification, summarization, and formatting tasks can run on Haiku or GPT-4o-mini at 1/10th the cost. Save the heavy models for tasks that actually need reasoning.
+
+### 2. Latency Hell
+
+Streaming helps, but it's not magic. If your first token takes 3 seconds to appear, users will assume the app is frozen. If your context window is stuffed with 50,000 tokens of "relevant" RAG chunks, you've just added 2-4 seconds of processing before the model even starts thinking.
+
+**The fix:** Aggressive context management.
+
+```typescript
+// Bad: Dump everything into context
+const response = await claude.messages.create({
+  model: 'claude-sonnet-4-20250514',
+  messages: [
+    { role: 'user', content: `${entireDocumentLibrary}\n\nQuestion: ${query}` }
+  ]
+});
+
+// Good: Retrieve smart, inject lean
+const relevantChunks = await vectorSearch(query, { limit: 3, threshold: 0.8 });
+const context = relevantChunks.map(c => c.content).join('\n\n');
+
+const response = await claude.messages.create({
+  model: 'claude-sonnet-4-20250514',
+  system: `You are a helpful assistant. Use this context to answer:\n\n${context}`,
+  messages: [{ role: 'user', content: query }]
+});
+```
+
+Three highly relevant chunks beat thirty vaguely related ones. Every time.
+
+### 3. The Hallucination Problem
+
+Your LLM will lie. Not maliciously — it's just confidently filling gaps with plausible-sounding nonsense. In a chatbot, that's awkward. In a product that generates reports, invoices, or medical information, it's a lawsuit.
+
+**The fix:** Constrained outputs + validation.
+
+```typescript
+// Force structured output
+const response = await claude.messages.create({
+  model: 'claude-sonnet-4-20250514',
+  system: `Extract invoice data. Return ONLY valid JSON matching this schema:
+{
+  "vendor": string,
+  "amount": number,
+  "date": string (ISO format),
+  "confidence": number (0-1)
+}
+If any field is uncertain, set confidence below 0.7.`,
+  messages: [{ role: 'user', content: invoiceText }]
+});
+
+// Validate before trusting
+const data = JSON.parse(response.content[0].text);
+if (data.confidence < 0.7) {
+  return { requiresHumanReview: true, extracted: data };
+}
+```
+
+Never trust raw LLM output for anything that matters. Parse it, validate it, and build escape hatches for uncertainty.
+
+---
+
+## Architecture That Scales
+
+Here's the stack I use for production LLM features:
+
+Input Interface (Frontend) The process begins at the client layer, built in React, designed to handle streaming display. This ensures low perceptual latency for the end-user by rendering tokens as they arrive.
+
+Edge Control (API Gateway) The request is intercepted by the Gateway, which acts as the infrastructure guardian, executing three critical functions:
+
+Rate limiting: Prevention of overload and attacks (DDoS).
+
+Auth: Identity verification and permission handling.
+
+Usage tracking: Accounting metrics for billing or monitoring purposes.
+
+Routing Logic (Request Router) The intelligent decision core analyzes the demand to define the best route, balancing performance and cost:
+
+Model selection: Dynamic choice of the most suitable model for the specific task.
+
+Cost optimization: Strategies to minimize computational expenditure (e.g., routing simpler queries to cheaper models).
+
+Execution Layer (Bifurcation) The router directs the flow into one of two possible paths:
+
+Path A (RAG Layer): Retrieval-Augmented Generation, utilizing hybrid search (Vector for semantic similarity + BM25 for keyword matching).
+
+Path B (Direct LLM Call): A direct call to the language model without added external context.
+
+Output Processing (Response Processor) Before returning to the user, the generated response (from either path) is processed:
+
+Validation: Integrity and safety checks (guardrails) on the output.
+
+Caching: Storing frequent responses to reduce future latency and cost.
+
+Logging: Audit trails and system observability.
+
+
+Key components:
+
+- **Rate limiting at the gateway** — Per-user, per-endpoint, per-day limits
+- **Usage tracking** — Log every request with tokens used, model, latency
+- **Response caching** — Identical queries hit cache, not the API
+- **Fallback chains** — If Claude is down, fall back to OpenAI (or vice versa)
+
+---
+
+## The Shipping Checklist
+
+Before you deploy any LLM feature, answer these:
+
+1. **Cost ceiling**: What's the max this feature can cost per user per month?
+2. **Failure mode**: When the API is slow/down/wrong, what does the user see?
+3. **Abuse vector**: How could someone exploit this to run up your bill?
+4. **Validation**: How do you verify the output is usable before showing it?
+5. **Monitoring**: How will you know when something breaks at 3 AM?
+
+If you can't answer all five, you're not ready to ship.
+
+---
+
+## The Bottom Line
+
+Building AI features is easy. Building AI features that survive contact with real users, real scale, and real costs is hard.
+
+The developers who figure this out aren't the ones chasing the newest model announcement. They're the ones obsessing over caching strategies, token optimization, and graceful degradation.
+
+Prototype fast. Ship carefully.
+
+---
+
+*Building something with LLMs and hitting production walls? [Let's talk](/contact) — I've probably hit the same wall and found a way through.*
