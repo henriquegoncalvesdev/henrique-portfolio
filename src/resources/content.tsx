@@ -7,7 +7,7 @@ const person: Person = {
   name: "Henrique Gonçalves",
   role: "Full-Stack Developer",
   avatar: "/images/avatar.jpg",
-  email: "[EMAIL_ADDRESS]",
+  email: "contact@henriquegoncalves.com",
   location: "America/Sao_Paulo", // Timezone for time display functionality
   locationDisplay: "Brazil", // Display location shown to users
   languages: ["English", "Portuguese"], // optional: Leave the array empty if you don't want to display languages
@@ -15,8 +15,10 @@ const person: Person = {
 
 const newsletter: Newsletter = {
   display: true,
-  title: "Join the Vector early access list",
-  description: "Get notified when Vector launches. Be the first to know.",
+  title: "Let's build something intelligent",
+  description: "Have a project that needs AI integration done right? I'm currently available for select engagements.",
+  calLink: "https://cal.com/henrique-goncalves-gh7nqw",
+  email: "contact@henriquegoncalves.com",
 };
 
 const social: Social = [
@@ -80,7 +82,7 @@ const about: About = {
   },
   calendar: {
     display: true,
-    link: "https://cal.com",
+    link: "https://cal.com/henrique-goncalves-gh7nqw",
   },
   intro: {
     display: true,
@@ -285,7 +287,7 @@ const gallery: Gallery = {
   label: "Gallery",
   title: `Photo gallery – ${person.name}`,
   description: `A photo collection by ${person.name}`,
-  // Images by https://lorant.one
+
   // These are placeholder images, replace with your own
   images: [
     {

@@ -1,5 +1,5 @@
-import { IconName } from "@/resources/icons";
-import { zones } from "tzdata";
+import type { IconName } from "@/resources/icons";
+import type { zones } from "tzdata";
 
 /**
  * IANA time zone string (e.g., 'Asia/Calcutta', 'Europe/Vienna').
@@ -44,6 +44,10 @@ export type Newsletter = {
   title: React.ReactNode;
   /** Description of the newsletter */
   description: React.ReactNode;
+  /** Link to calendar/scheduling (e.g., Cal.com, Calendly) */
+  calLink?: string;
+  /** Contact email address */
+  email?: string;
 };
 
 /**
