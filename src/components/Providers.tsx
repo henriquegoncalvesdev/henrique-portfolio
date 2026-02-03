@@ -1,5 +1,6 @@
 "use client";
 
+// biome-ignore lint/style/useImportType: <explanation>
 import {
   BorderStyle,
   ChartMode,

@@ -112,9 +112,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           {/* Tech Stack */}
           {stack.length > 0 && (
             <Row gap="8" wrap>
-              {stack.map((tech, index) => (
+              {stack.map((tech) => (
                 <Tag
-                  key={`${title}-tech-${index}`}
+                  key={`${title}-tech-${tech}`}
                   size="s"
                   label={tech}
                   onSolid="neutral-weak"

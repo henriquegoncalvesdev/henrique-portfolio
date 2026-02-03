@@ -198,18 +198,18 @@ export default function About() {
           )}
 
           {about.work.display && (
-            <>
+            <React.Fragment key="work-section">
               <Heading as="h2" id={about.work.title} variant="display-strong-s" marginBottom="m">
                 {about.work.title}
               </Heading>
               <Column fillWidth marginBottom="40">
                 <Timeline experiences={about.work.experiences} />
               </Column>
-            </>
+            </React.Fragment>
           )}
 
           {about.studies.display && (
-            <>
+            <React.Fragment key="studies-section">
               <Heading as="h2" id={about.studies.title} variant="display-strong-s" marginBottom="m">
                 {about.studies.title}
               </Heading>
@@ -225,11 +225,11 @@ export default function About() {
                   </Column>
                 ))}
               </Column>
-            </>
+            </React.Fragment>
           )}
 
           {about.technical.display && (
-            <>
+            <React.Fragment key="technical-section">
               <Heading
                 as="h2"
                 id={about.technical.title}
@@ -249,7 +249,7 @@ export default function About() {
                   />
                 ))}
               </Column>
-            </>
+            </React.Fragment>
           )}
         </Column>
       </Row>

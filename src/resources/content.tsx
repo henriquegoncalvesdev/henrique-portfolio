@@ -1,13 +1,13 @@
-import { About, Blog, Gallery, Home, Newsletter, Person, Social, Work } from "@/types";
+import type { About, Blog, Gallery, Home, Newsletter, Person, Social, Work } from "@/types";
 import { Line, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
   firstName: "Henrique",
   lastName: "Gonçalves",
-  name: `Henrique Gonçalves`,
+  name: "Henrique Gonçalves",
   role: "Full-Stack Developer",
   avatar: "/images/avatar.jpg",
-  email: "henriquegoncalvesdev@gmail.com",
+  email: "[EMAIL_ADDRESS]",
   location: "America/Sao_Paulo", // Timezone for time display functionality
   locationDisplay: "Brazil", // Display location shown to users
   languages: ["English", "Portuguese"], // optional: Leave the array empty if you don't want to display languages
@@ -15,8 +15,8 @@ const person: Person = {
 
 const newsletter: Newsletter = {
   display: true,
-  title: <>Join the Vector early access list</>,
-  description: <>Get notified when Vector launches. Be the first to know.</>,
+  title: "Join the Vector early access list",
+  description: "Get notified when Vector launches. Be the first to know.",
 };
 
 const social: Social = [
@@ -49,7 +49,7 @@ const home: Home = {
   label: "Home",
   title: `${person.name} – ${person.role}`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Code that thinks, design that breathes.</>,
+  headline: "Code that thinks, design that breathes.",
   featured: {
     display: true,
     title: (
@@ -63,11 +63,7 @@ const home: Home = {
     ),
     href: "/work/vector",
   },
-  subline: (
-    <>
-    Full-stack engineer turning AI capabilities into seamless user experiences.
-</>
-  ),
+  subline: "Full-stack engineer turning AI capabilities into seamless user experiences.",
 };
 
 const about: About = {
@@ -89,15 +85,7 @@ const about: About = {
   intro: {
     display: true,
     title: "Introduction",
-    description: (
-      <>
-        
-
-I build web apps that think.
-Full-stack development meets practical AI I integrate LLMs into production systems, not just prototypes. From React to LLM API, I own the architecture, ship the code, and make sure it actually works at scale.
-Based in Brazil. Working globally.
-      </>
-    ),
+    description: "I build web apps that think. Full-stack development meets practical AI I integrate LLMs into production systems, not just prototypes. From React to LLM API, I own the architecture, ship the code, and make sure it actually works at scale. Based in Brazil. Working globally.",
   },
   work: {
     display: true, // set to false to hide this section
@@ -110,15 +98,9 @@ Based in Brazil. Working globally.
         featured: true,
         stack: ["React", "Claude API", "Supabase"],
         achievements: [
-          <>
-            <strong>Problem:</strong> Developers lose hours switching between code and AI chats, manually crafting context for LLMs.
-          </>,
-          <>
-            <strong>Solution:</strong> Reduced context-switching by generating AI-ready prompts from project structure automatically.
-          </>,
-          <>
-            <strong>Outcome:</strong> Streamlined AI-assisted development workflow with automated context generation.
-          </>,
+          "Problem: Developers lose hours switching between code and AI chats, manually crafting context for LLMs.",
+          "Solution: Reduced context-switching by generating AI-ready prompts from project structure automatically.",
+          "Outcome: Streamlined AI-assisted development workflow with automated context generation.",
         ],
         images: [
           {

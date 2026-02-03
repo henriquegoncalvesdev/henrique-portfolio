@@ -1,5 +1,7 @@
-import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
-import React, { ReactNode } from "react";
+import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
+import type { MDXComponents } from "mdx/types";
+import type React from "react";
+import type { ReactNode } from "react";
 import { slugify as transliterate } from "transliteration";
 
 import {
@@ -8,8 +10,8 @@ import {
   Text,
   InlineCode,
   CodeBlock,
-  TextProps,
-  MediaProps,
+  type TextProps,
+  type MediaProps,
   Accordion,
   AccordionGroup,
   Table,
@@ -121,10 +123,11 @@ function createInlineCode({ children }: { children: ReactNode }) {
   return <InlineCode>{children}</InlineCode>;
 }
 
-function createCodeBlock(props: any) {
+function createCodeBlock(props: React.ComponentPropsWithoutRef<"pre"> & { children?: React.ReactElement<{ className?: string; children?: string }> }) {
   // For pre tags that contain code blocks
-  if (props.children && props.children.props && props.children.props.className) {
-    const { className, children } = props.children.props;
+  if (props.children?.props?.className) {
+    const className = props.children.props.className ?? "";
+    const codeContent = props.children.props.children ?? "";
 
     // Extract language from className (format: language-xxx)
     const language = className.replace("language-", "");
@@ -136,7 +139,7 @@ function createCodeBlock(props: any) {
         marginBottom="16"
         codes={[
           {
-            code: children,
+            code: codeContent,
             language,
             label,
           },
@@ -170,22 +173,22 @@ function createHR() {
   );
 }
 
-const components = {
-  p: createParagraph as any,
-  h1: createHeading("h1") as any,
-  h2: createHeading("h2") as any,
-  h3: createHeading("h3") as any,
-  h4: createHeading("h4") as any,
-  h5: createHeading("h5") as any,
-  h6: createHeading("h6") as any,
-  img: createImage as any,
-  a: CustomLink as any,
-  code: createInlineCode as any,
-  pre: createCodeBlock as any,
-  ol: createList("ol") as any,
-  ul: createList("ul") as any,
-  li: createListItem as any,
-  hr: createHR as any,
+const components: MDXComponents = {
+  p: createParagraph,
+  h1: createHeading("h1"),
+  h2: createHeading("h2"),
+  h3: createHeading("h3"),
+  h4: createHeading("h4"),
+  h5: createHeading("h5"),
+  h6: createHeading("h6"),
+  img: createImage,
+  a: CustomLink,
+  code: createInlineCode,
+  pre: createCodeBlock,
+  ol: createList("ol"),
+  ul: createList("ul"),
+  li: createListItem,
+  hr: createHR,
   Heading,
   Text,
   CodeBlock,

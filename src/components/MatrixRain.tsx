@@ -31,7 +31,7 @@ export function MatrixRain() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = "#10b981";
-      ctx.font = fontSize + "px monospace";
+      ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
         const char = charArray[Math.floor(Math.random() * charArray.length)];
