@@ -55,12 +55,10 @@
   transform: translateX(-50%);
   width: 2px;
   height: calc(100% - 8px);
-  background: linear-gradient(
-    to bottom,
-    var(--brand-solid-strong) 0%,
-    var(--brand-alpha-medium) 50%,
-    var(--neutral-alpha-weak) 100%
-  );
+  background: linear-gradient(to bottom,
+      var(--brand-solid-strong) 0%,
+      var(--brand-alpha-medium) 50%,
+      var(--neutral-alpha-weak) 100%);
   transform-origin: top;
   z-index: 1;
 
@@ -121,6 +119,11 @@
   @media (max-width: breakpoints.$s) {
     min-width: 100%;
     max-width: 100%;
+    margin-bottom: var(--static-space-16);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -143,7 +146,12 @@
   border: 1px solid var(--neutral-border-medium);
   border-radius: var(--radius-m);
   position: relative;
-  
+  background: #000;
+
+  video {
+    object-fit: contain;
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -154,7 +162,7 @@
     pointer-events: none;
     border-radius: inherit;
   }
-  
+
   &:hover::after {
     opacity: 1;
   }
@@ -169,4 +177,47 @@
   .mediaContainer:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
+}
+
+.mediaButton {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.mediaThumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-m);
+}
+
+.mediaOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  border-radius: var(--radius-m);
+  pointer-events: none;
+}
+
+.mediaButton:hover .mediaOverlay,
+.mediaButton:focus-visible .mediaOverlay {
+  opacity: 1;
+}
+
+.expandIcon {
+  font-size: 2rem;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
