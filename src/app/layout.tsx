@@ -48,7 +48,7 @@ export default async function RootLayout({
       <head>
         <script
           id="theme-init"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: Static theme init script prevents FOUC, no user input
           dangerouslySetInnerHTML={{
             __html: `
               (function() {

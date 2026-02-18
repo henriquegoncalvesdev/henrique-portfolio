@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Column, Row, Text, Media, Tag } from "@once-ui-system/core";
+import { Column, Row, Text, Tag } from "@once-ui-system/core";
 import { GlassCard } from "./GlassCard";
+import { Lightbox } from "./Lightbox";
 import styles from "./Timeline.module.scss";
 import type { ReactNode } from "react";
 
@@ -97,140 +99,189 @@ export function TimelineItem({
   featured = false,
   stack = [],
 }: TimelineItemProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [activeMedia, setActiveMedia] = useState<{ src: string; alt: string } | null>(null);
+
+  const openLightbox = (src: string, alt: string) => {
+    setActiveMedia({ src, alt });
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    setActiveMedia(null);
+  };
+
   return (
-    <Row fillWidth className={styles.timelineItem}>
-      {/* Timeline track */}
-      <Column horizontal="center" className={styles.track}>
-        <motion.div
-          className={styles.dot}
-          variants={dotVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
+    <>
+      <Row fillWidth className={styles.timelineItem}>
+        {/* Timeline track */}
+        <Column horizontal="center" className={styles.track}>
           <motion.div
-            className={styles.dotPulse}
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.5, 0, 0.5],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        </motion.div>
-        {!isLast && (
-          <motion.div
-            className={styles.line}
-            variants={lineVariants}
+            className={styles.dot}
+            variants={dotVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-          />
-        )}
-      </Column>
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            <motion.div
+              className={styles.dotPulse}
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.5, 0, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.div>
+          {!isLast && (
+            <motion.div
+              className={styles.line}
+              variants={lineVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+            />
+          )}
+        </Column>
 
-      {/* Content */}
-      <motion.div
-        className={styles.content}
-        variants={contentVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-      >
-        <GlassCard delay={index} hover={false}>
-          <Column gap="16" fillWidth>
-            {/* Header */}
-            <Row fillWidth horizontal="between" vertical="start" wrap gap="8">
-              <Column gap="4">
-                <Row gap="12" vertical="center" wrap>
-                  <Text id={company} variant="heading-strong-l">
-                    {company}
+        {/* Content */}
+        <motion.div
+          className={styles.content}
+          variants={contentVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <GlassCard delay={index} hover={false}>
+            <Column gap="16" fillWidth>
+              {/* Header */}
+              <Row fillWidth horizontal="between" vertical="start" wrap gap="8">
+                <Column gap="4">
+                  <Row gap="12" vertical="center" wrap>
+                    <Text id={company} variant="heading-strong-l">
+                      {company}
+                    </Text>
+                    {featured && (
+                      <Tag size="s" label="Featured" onSolid="brand-medium" />
+                    )}
+                  </Row>
+                  <Text variant="body-default-s" onBackground="brand-weak">
+                    {role}
                   </Text>
-                  {featured && (
-                    <Tag size="s" label="Featured" onSolid="brand-medium" />
-                  )}
-                </Row>
-                <Text variant="body-default-s" onBackground="brand-weak">
-                  {role}
+                </Column>
+                <Text variant="heading-default-xs" onBackground="neutral-weak" className={styles.timeframe}>
+                  {timeframe}
                 </Text>
-              </Column>
-              <Text variant="heading-default-xs" onBackground="neutral-weak" className={styles.timeframe}>
-                {timeframe}
-              </Text>
-            </Row>
+              </Row>
 
-            {/* Achievements */}
-            <Column as="ul" gap="12" className={styles.achievements}>
-              {achievements.map((achievement, i) => (
-                <motion.li
-                  key={`${company}-achievement-${i}`}
-                  variants={achievementVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  custom={i}
-                  className={styles.achievementItem}
-                >
-                  <Text variant="body-default-m">{achievement}</Text>
-                </motion.li>
-              ))}
-            </Column>
-
-            {/* Tech Stack */}
-            {stack.length > 0 && (
-              <Row gap="8" wrap paddingTop="8">
-                {stack.map((tech, i) => (
-                  <Tag
-                    key={`${company}-tech-${i}`}
-                    size="s"
-                    label={tech}
-                    onSolid="neutral-weak"
-                  />
+              {/* Achievements */}
+              <Column as="ul" gap="12" className={styles.achievements}>
+                {achievements.map((achievement, i) => (
+                  <motion.li
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${company}-achievement-${typeof achievement === 'string' ? achievement : i}`}
+                    variants={achievementVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    custom={i}
+                    className={styles.achievementItem}
+                  >
+                    <Text variant="body-default-m">{achievement}</Text>
+                  </motion.li>
                 ))}
-              </Row>
-            )}
+              </Column>
 
-            {/* Images & Videos */}
-            {images.length > 0 && (
-              <Row fillWidth gap="12" wrap paddingTop="8">
-                {images.map((image, i) => {
-                  const isVideo = image.src.endsWith('.mp4') || image.src.endsWith('.webm');
-                  return (
-                    <motion.div
-                      key={`${company}-media-${i}`}
-                      variants={imageVariants}
-                      initial="hidden"
-                      whileInView="visible"
-                      viewport={{ once: true }}
-                      custom={i}
-                      className={styles.imageWrapper}
-                    >
-                      <div
-                        style={{
-                          aspectRatio: `${image.width}/${image.height}`,
-                        }}
-                        className={isVideo ? styles.videoContainer : styles.mediaContainer}
+              {/* Tech Stack */}
+              {stack.length > 0 && (
+                <Row gap="8" wrap paddingTop="8">
+                  {stack.map((tech) => (
+                    <Tag
+                      key={`${company}-tech-${tech}`}
+                      size="s"
+                      label={tech}
+                      onSolid="neutral-weak"
+                    />
+                  ))}
+                </Row>
+              )}
+
+              {/* Images & Videos */}
+              {images.length > 0 && (
+                <Row fillWidth gap="12" wrap paddingTop="8">
+                  {images.map((image, i) => {
+                    const isVideo = image.src.endsWith('.mp4') || image.src.endsWith('.webm') || image.src.endsWith('.mov');
+                    return (
+                      <motion.div
+                        key={`${company}-media-${image.src}`}
+                        variants={imageVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        custom={i}
+                        className={styles.imageWrapper}
                       >
-                        <Media
-                          enlarge
-                          radius="m"
-                          sizes="300px"
-                          alt={image.alt}
-                          src={image.src}
-                        />
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </Row>
-            )}
-          </Column>
-        </GlassCard>
-      </motion.div>
-    </Row>
+                        <button
+                          type="button"
+                          onClick={() => openLightbox(image.src, image.alt)}
+                          className={styles.mediaButton}
+                          style={{
+                            aspectRatio: `${image.width}/${image.height}`,
+                          }}
+                          aria-label={`View ${image.alt}`}
+                        >
+                          <div className={isVideo ? styles.videoContainer : styles.mediaContainer}>
+                            {isVideo ? (
+                              <video
+                                src={image.src}
+                                muted
+                                loop
+                                playsInline
+                                className={styles.mediaThumbnail}
+                                onMouseEnter={(e) => e.currentTarget.play()}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.pause();
+                                  e.currentTarget.currentTime = 0;
+                                }}
+                              >
+                                <track kind="captions" />
+                              </video>
+                            ) : (
+                              <img
+                                src={image.src}
+                                alt={image.alt}
+                                className={styles.mediaThumbnail}
+                              />
+                            )}
+                            <div className={styles.mediaOverlay}>
+                              <span className={styles.expandIcon}>⤢</span>
+                            </div>
+                          </div>
+                        </button>
+                      </motion.div>
+                    );
+                  })}
+                </Row>
+              )}
+            </Column>
+          </GlassCard>
+        </motion.div>
+      </Row>
+
+      {/* Lightbox Modal */}
+      {activeMedia && (
+        <Lightbox
+          src={activeMedia.src}
+          alt={activeMedia.alt}
+          isOpen={lightboxOpen}
+          onClose={closeLightbox}
+        />
+      )}
+    </>
   );
 }
 
@@ -251,7 +302,7 @@ export function Timeline({ experiences }: TimelineProps) {
     <Column fillWidth gap="0" className={styles.timeline}>
       {experiences.map((experience, index) => (
         <TimelineItem
-          key={`experience-${index}-${experience.company}-${experience.timeframe}`}
+          key={`experience-${experience.company}-${experience.timeframe}`}
           {...experience}
           index={index}
           isLast={index === experiences.length - 1}
