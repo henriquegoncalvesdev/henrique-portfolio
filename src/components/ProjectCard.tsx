@@ -44,19 +44,35 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   stack = [],
   outcome,
 }) => {
+  const firstImage = images[0] || "";
+  const isVideo = firstImage.endsWith(".mp4") || firstImage.endsWith(".webm") || firstImage.endsWith(".mov");
+
   return (
     <Column fillWidth gap="m" className={styles.projectCard}>
       {/* Preview Section */}
       <div className={styles.previewWrapper}>
         {images.length > 0 && (
-          <Media
-            priority={priority}
-            enlarge
-            src={images[0]}
-            alt={title}
-            aspectRatio="16 / 9"
-            sizes="(max-width: 960px) 100vw, 960px"
-          />
+          isVideo ? (
+            <video
+              src={firstImage}
+              muted
+              loop
+              playsInline
+              autoPlay
+              className={styles.videoPreview}
+            >
+              <track kind="captions" />
+            </video>
+          ) : (
+            <Media
+              priority={priority}
+              enlarge
+              src={firstImage}
+              alt={title}
+              aspectRatio="16 / 9"
+              sizes="(max-width: 960px) 100vw, 960px"
+            />
+          )
         )}
       </div>
 

@@ -22,6 +22,11 @@ const nextConfig = {
     compiler: "modern",
     silenceDeprecations: ["legacy-js-api"],
   },
+  experimental: {
+    turbopack: {
+      root: ".",
+    },
+  },
 };
 
 export default withMDX(nextConfig);
