@@ -11,6 +11,7 @@
 
 # next.js
 /.next/
+.next/
 /out/
 
 # turbopack / turbo
@@ -40,6 +41,7 @@ pnpm-debug.log*
 # editor
 .vscode/
 .idea/
+.roo/
 
 # misc caches
 .cache/
